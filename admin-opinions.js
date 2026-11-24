@@ -8,7 +8,7 @@ if(form){
   const host=document.createElement('fieldset');
   host.className='opinion-document-fields';
   host.innerHTML=`<legend>Dissenting / Concurrent opinions</legend>
-    <p class="opinion-help">Add a separate opinion for every justice. Justice name and document are required for each dissenting or concurrent opinion.</p>
+    <p class="opinion-help">Add an opinion only when it is needed. Justice name and document are required for every added opinion.</p>
     <div id="opinion-rows"></div>
     <button id="add-opinion" class="secondary-button" type="button">+ Add justice opinion</button>`;
   form.insertBefore(host,form.querySelector('.form-actions'));
@@ -17,45 +17,48 @@ if(form){
   function addRow(opinion={}){
     const row=document.createElement('div');row.className='opinion-row';
     row.innerHTML=`<div class="opinion-row-grid">
-      <label>Justice name <span>*</span><input name="opinionJustice" required value="${(opinion.justice||'').replace(/"/g,'&quot;')}" maxlength="120"></label>
-      <label>Opinion type <span>*</span><select name="opinionType" required><option value="">Select type</option><option value="Dissenting">Dissenting</option><option value="Concurrent">Concurrent</option></select></label>
-      <label>Opinion title<input name="opinionTitle" value="${(opinion.title||'').replace(/"/g,'&quot;')}" maxlength="180" placeholder="Optional"></label>
-      <label>Opinion document <span>*</span><input name="opinionDocument" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required></label>
+      <label>Justice name <span>*</span><input name="opinionJustice" value="${(opinion.justice||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}" maxlength="120"></label>
+      <label>Opinion type <span>*</span><select name="opinionType"><option value="">Select type</option><option value="Dissenting">Dissenting</option><option value="Concurrent">Concurrent</option></select></label>
+      <label>Opinion title<input name="opinionTitle" value="${(opinion.title||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}" maxlength="180" placeholder="Optional"></label>
+      <label>Opinion document <span>*</span><input name="opinionDocument" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
     </div><button class="danger-button remove-opinion" type="button">Remove opinion</button>`;
     const type=row.querySelector('[name="opinionType"]');type.value=opinion.type||'';
     row.querySelector('.remove-opinion').addEventListener('click',()=>row.remove());
     rows.append(row);
   }
 
-  addRow();
   document.querySelector('#add-opinion').addEventListener('click',()=>addRow());
-
-  form.addEventListener('submit',async event=>{
-    event.prevent();
-  });
 
   form.addEventListener('submit',async event=>{
     const rowsNow=[...rows.querySelectorAll('.opinion-row')];
     if(!rowsNow.length)return;
+
     const data=new FormData(form);
     const title=String(data.get('title')||'').trim();
     const docket=String(data.get('docket')||'').trim();
     if(!title)return;
 
+    const seen=new Set();
     const opinions=[];
     for(const row of rowsNow){
       const justice=row.querySelector('[name="opinionJustice"]').value.trim();
       const type=row.querySelector('[name="opinionType"]').value;
       const opinionTitle=row.querySelector('[name="opinionTitle"]').value.trim();
       const file=row.querySelector('[name="opinionDocument"]').files[0];
-      if(!justice||!type||(!file)){sayOpinion('A justice name, opinion type, and document are required for every dissenting or concurrent opinion.',true);event.preventDefault();return;}
+      if(!justice||!type||!file){sayOpinion('For each added opinion, enter the justice name, select an opinion type, and attach the document.',true);event.preventDefault();return;}
+      const key=`${justice.toLowerCase()}|${type.toLowerCase()}`;
+      if(seen.has(key)){sayOpinion(`Only one ${type.toLowerCase()} opinion is allowed per justice for this decision.`,true);event.preventDefault();return;}seen.add(key);
+      const allowed=['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if(!allowed.includes(file.type)&&!/\.(pdf|doc|docx)$/i.test(file.name)){sayOpinion('Opinion documents must be PDF, DOC, or DOCX files.',true);event.preventDefault();return;}
+      if(file.size>8*1024*1024){sayOpinion('Opinion documents must be 8 MB or smaller.',true);event.preventDefault();return;}
+
       const document=await readFile(file);
       opinions.push({id:crypto.randomUUID?.()||String(Date.now()),justice,type,title:opinionTitle,documentName:file.name,documentType:file.type,document});
     }
+
     const items=loadOpinions().filter(item=>!(item.caseTitle===title&&item.docket===docket));
     items.push({caseTitle:title,docket,opinions});
-    try{saveOpinions(items);const message=document.querySelector('#admin-message');if(message){message.textContent='Decision and justice opinion documents saved in this browser.';}}
-    catch{sayOpinion('The document is too large for browser storage. Use a smaller PDF or DOC file.',true);event.preventDefault();}
+    try{saveOpinions(items);const message=document.querySelector('#admin-message');if(message)message.textContent='Decision and justice opinion documents saved in this browser.';}catch{sayOpinion('The documents are too large for browser storage. Use smaller PDF or DOC files.',true);event.preventDefault();}
   });
 }
 
