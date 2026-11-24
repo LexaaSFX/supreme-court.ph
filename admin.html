@@ -6,23 +6,37 @@
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"><link rel="stylesheet" href="admin.css">
 </head>
 <body class="admin-page">
-  <div class="roleplay-bar"><span class="roleplay-dot"></span> FICTIONAL ROLEPLAY SITE <span class="bar-divider">|</span> Admin workspace</div>
-  <header class="topbar"><div class="container masthead"><a class="brand" href="index.html"><span class="seal"><span>⚖</span></span><span class="brand-copy"><strong>Supreme Court</strong><small>Roleplay administration</small></span></a><a class="back-site" href="index.html">← View public site</a></div></header>
-  <main class="admin-container">
-    <div class="admin-heading"><div><p class="eyebrow dark-eyebrow">Portal management</p><h1>Admin workspace</h1><p>Manage fictional decisions and court calendar entries for your roleplay site.</p></div><span class="storage-badge"><i></i> Saved in this browser</span></div>
-    <div class="admin-warning"><strong>Important:</strong> This GitHub Pages site has no server or administrator login. Entries are stored only in this browser and will not automatically appear to other visitors or devices. Do not enter real, confidential, or personal information. Use Export/Import to back up or transfer your data.</div>
-    <div class="admin-toolbar"><div class="admin-tabs" role="tablist"><button class="admin-tab active" data-tab="decisions" type="button">Decisions <span id="decision-count">0</span></button><button class="admin-tab" data-tab="schedule" type="button">Schedule <span id="schedule-count">0</span></button></div><div class="backup-actions"><button id="export-data" class="secondary-button" type="button">Export backup</button><label class="secondary-button import-button">Import backup<input id="import-data" type="file" accept="application/json,.json" hidden></label></div></div>
-    <section id="decision-panel" class="admin-panel"><div class="panel-intro"><div><p class="eyebrow dark-eyebrow">Fictional docket</p><h2>Add a decision</h2></div><p>New entries are shown on the public homepage in this browser after saving.</p></div>
-      <form id="decision-form" class="admin-form"><label>Case title <span>*</span><input name="title" required maxlength="180" placeholder="e.g. Example Party v. Example Agency"></label><div class="form-row"><label>Docket / case number<input name="docket" maxlength="80" placeholder="e.g. G.R. RP-2026-001"></label><label>Category<select name="category"><option value="constitutional">Constitutional</option><option value="civil">Civil</option><option value="criminal">Criminal</option><option value="other">Other</option></select></label><label>Decision date<input name="date" type="date"></label></div><label>Short summary<textarea name="summary" rows="2" maxlength="350" placeholder="A brief description for the public case listing"></textarea></label><label>Decision / roleplay text<textarea name="decision" rows="5" placeholder="The fictional decision text or roleplay summary"></textarea></label><button class="primary-button" type="submit">Save decision <span>+</span></button></form>
-      <div class="managed-list-heading"><h3>Current decisions</h3><span id="decision-empty-admin">No decisions added</span></div><div id="admin-decisions" class="managed-list"></div>
-    </section>
-    <section id="schedule-panel" class="admin-panel" hidden><div class="panel-intro"><div><p class="eyebrow dark-eyebrow">Simulated docket</p><h2>Add a schedule item</h2></div><p>Add a fictional hearing, session, or roleplay event.</p></div>
-      <form id="schedule-form" class="admin-form"><label>Event title <span>*</span><input name="title" required maxlength="160" placeholder="e.g. En Banc Session"></label><div class="form-row"><label>Event type<input name="kind" maxlength="40" placeholder="e.g. ORAL ARGUMENTS"></label><label>Date<input name="date" type="date"></label></div><div class="form-row"><label>Time<input name="time" type="time"></label><label>Location / venue<input name="venue" maxlength="100" placeholder="e.g. Session Hall"></label></div><button class="primary-button" type="submit">Save schedule item <span>+</span></button></form>
-      <div class="managed-list-heading"><h3>Current schedule</h3><span id="schedule-empty-admin">No events added</span></div><div id="admin-schedule" class="managed-list"></div>
-    </section>
-    <p id="admin-message" class="admin-message" role="status" aria-live="polite"></p>
-  </main>
-  <footer class="footer"><div class="container footer-bottom"><span>Fictional roleplay administration</span><a href="index.html">Return to public site ↑</a></div></footer>
+  <div id="admin-login" class="admin-login">
+    <form id="login-form" class="login-card">
+      <span class="login-seal" aria-hidden="true">⚖</span>
+      <p class="eyebrow dark-eyebrow">Restricted workspace</p>
+      <h1>Administrator login</h1>
+      <p>Enter the portal password to continue.</p>
+      <label for="admin-password">Password</label>
+      <input id="admin-password" type="password" autocomplete="current-password" required autofocus>
+      <button class="primary-button" type="submit">Sign in <span>→</span></button>
+      <p id="login-error" class="login-error" role="alert"></p>
+    </form>
+  </div>
+  <div id="admin-workspace" hidden>
+    <div class="roleplay-bar"><span class="roleplay-dot"></span> FICTIONAL ROLEPLAY SITE <span class="bar-divider">|</span> Admin workspace</div>
+    <header class="topbar"><div class="container masthead"><a class="brand" href="index.html"><span class="seal"><span>⚖</span></span><span class="brand-copy"><strong>Supreme Court</strong><small>Roleplay administration</small></span></a><a class="back-site" href="index.html">← View public site</a></div></header>
+    <main class="admin-container">
+      <div class="admin-heading"><div><p class="eyebrow dark-eyebrow">Portal management</p><h1>Admin workspace</h1><p>Manage fictional decisions and court calendar entries for your roleplay site.</p></div><span class="storage-badge"><i></i> Saved in this browser</span></div>
+      <div class="admin-warning"><strong>Important:</strong> This GitHub Pages site has no server or administrator login. Entries are stored only in this browser and will not automatically appear to other visitors or devices. Use Export/Import to transfer data. Do not enter real, confidential, or personal information.</div>
+      <div class="admin-toolbar"><div class="admin-tabs" role="tablist"><button class="admin-tab active" data-tab="decisions" type="button">Decisions <span id="decision-count">0</span></button><button class="admin-tab" data-tab="schedule" type="button">Schedule <span id="schedule-count">0</span></button></div><div class="backup-actions"><button id="export-data" class="secondary-button" type="button">Export backup</button><label class="secondary-button import-button">Import backup<input id="import-data" type="file" accept="application/json,.json" hidden></label></div></div>
+      <section id="decision-panel" class="admin-panel"><div class="panel-intro"><div><p class="eyebrow dark-eyebrow">Fictional docket</p><h2>Add a decision</h2></div><p>New entries are shown on the public homepage in this browser after saving.</p></div>
+        <form id="decision-form" class="admin-form"><label>Case title <span>*</span><input name="title" required maxlength="180" placeholder="e.g. Example Party v. Example Agency"></label><div class="form-row"><label>Docket / case number<input name="docket" maxlength="80" placeholder="e.g. G.R. RP-2026-001"></label><label>Category<select name="category"><option value="constitutional">Constitutional</option><option value="civil">Civil</option><option value="criminal">Criminal</option><option value="other">Other</option></select></label><label>Decision date<input name="date" type="date"></label></div><label>Short summary<textarea name="summary" rows="2" maxlength="350" placeholder="A brief description for the public case listing"></textarea></label><label>Decision / roleplay text<textarea name="decision" rows="5" placeholder="The fictional decision text or roleplay summary"></textarea></label><button class="primary-button" type="submit">Save decision <span>+</span></button></form>
+        <div class="managed-list-heading"><h3>Current decisions</h3><span id="decision-empty-admin">No decisions added</span></div><div id="admin-decisions" class="managed-list"></div>
+      </section>
+      <section id="schedule-panel" class="admin-panel" hidden><div class="panel-intro"><div><p class="eyebrow dark-eyebrow">Simulated docket</p><h2>Add a schedule item</h2></div><p>Add a fictional hearing, session, or roleplay event.</p></div>
+        <form id="schedule-form" class="admin-form"><label>Event title <span>*</span><input name="title" required maxlength="160" placeholder="e.g. En Banc Session"></label><div class="form-row"><label>Event type<input name="kind" maxlength="40" placeholder="e.g. ORAL ARGUMENTS"></label><label>Date<input name="date" type="date"></label></div><div class="form-row"><label>Time<input name="time" type="time"></label><label>Location / venue<input name="venue" maxlength="100" placeholder="e.g. Session Hall"></label></div><button class="primary-button" type="submit">Save schedule item <span>+</span></button></form>
+        <div class="managed-list-heading"><h3>Current schedule</h3><span id="schedule-empty-admin">No events added</span></div><div id="admin-schedule" class="managed-list"></div>
+      </section>
+      <p id="admin-message" class="admin-message" role="status" aria-live="polite"></p>
+    </main>
+    <footer class="footer"><div class="container footer-bottom"><span>Fictional roleplay administration</span><a href="index.html">Return to public site ↑</a></div></footer>
+  </div>
   <script src="admin.js"></script>
 </body>
 </html>
