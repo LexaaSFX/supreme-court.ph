@@ -1,23 +1,21 @@
 # Supreme Court of the Philippines — Roleplay Portal
 
-A responsive, fictional Supreme Court roleplay website.
+A responsive fictional court portal with a blue-and-gold visual theme, responsive navigation, fictional decisions, docket search and category filters, simulated calendar, and clear roleplay disclaimers.
 
 ## Run locally
+
+Open `index.html` in a browser, or run:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Open `http://localhost:8080`.
+Then visit `http://localhost:8080`.
 
-## Enable GitHub Pages
+## Publish with GitHub Pages
 
-1. Open the repository on GitHub.
-2. Go to **Settings → Pages**.
-3. Choose **Deploy from a branch**.
-4. Select `main` and `/ (root)`.
-5. Click **Save**.
+In the repository, open **Settings → Pages**, choose **Deploy from a branch**, select `main` and `/(root)`, then save. The custom domain is kept in the repository's `CNAME` file.
 
-## Disclaimer
+## Roleplay disclaimer
 
-This project is fictional and is not affiliated with or endorsed by the Judiciary of the Philippines. Cases and decisions must not be used as legal authority or advice.
+This website is an independent fictional roleplay project and is not affiliated with or endorsed by the Supreme Court or any Philippine government agency. All case names, docket numbers, schedules, and rulings shown here are invented and are not legal advice or legal authority.
