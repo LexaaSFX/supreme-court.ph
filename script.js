@@ -1,3 +1,6 @@
+const supremeCourtLogo='https://upload.wikimedia.org/wikipedia/commons/3/3a/Supreme_Court_of_the_Philippines.svg';
+document.querySelectorAll('.seal').forEach(seal=>{seal.innerHTML=`<img src="${supremeCourtLogo}" alt="Seal of the Supreme Court of the Philippines" style="width:82%;height:82%;object-fit:contain">`;});
+
 const menuButton=document.querySelector('.menu-btn');
 const nav=document.querySelector('.nav');
 menuButton.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open));});
